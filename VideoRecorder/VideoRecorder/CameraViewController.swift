@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import AVFoundation
 
 class CameraViewController: UIViewController {
-
+    lazy private var captureSession = AVCaptureSession()
     @IBOutlet var recordButton: UIButton!
     @IBOutlet var cameraView: CameraPreviewView!
 
@@ -19,7 +20,36 @@ class CameraViewController: UIViewController {
 
 		// Resize camera preview to fill the entire screen
 		cameraView.videoPlayerView.videoGravity = .resizeAspectFill
+        setUpCamera()
 	}
+    
+   
+        
+        
+        
+    
+    
+    private func setUpCamera() {
+        let camera = bestCamera()
+        
+        // configuration
+        
+        
+        // commit configuration
+    }
+    private func bestCamera() -> AVCaptureDevice {
+        // front / back
+        // wide angle, ultra wide angle, depth, zoom lens
+        // try ultra wide lens
+        if let device = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) {
+            return device
+        }
+        // try wide angle lens
+        if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
+            return device
+        }
+        fatalError("No cameras available on the device (or you're using a simulator)")
+    }
 
 
     @IBAction func recordButtonPressed(_ sender: Any) {
@@ -37,5 +67,5 @@ class CameraViewController: UIViewController {
 		let fileURL = documentsDirectory.appendingPathComponent(name).appendingPathExtension("mov")
 		return fileURL
 	}
-}
 
+}
